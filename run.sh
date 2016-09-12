@@ -3,11 +3,21 @@
 # run.sh {parameters}
 
 # HOMER Options, defaults
+if [ -z "${DB_USER}" ]; then
 DB_USER=homer_user
+fi
+if [ -z "${DB_PASS}" ]; then
 DB_PASS=homer_password
+fi
+if [ -z "${DB_HOST}" ]; then
 DB_HOST="127.0.0.1"
-ES_HOST="http://127.0.0.1:9200"
+fi
+if [ -z "${ELASTIC}" ]; then
+ELASTIC="127.0.0.1:9200"
+fi
+if [ -z "${LISTEN_PORT}" ]; then
 LISTEN_PORT=9060
+fi
 
 # HOMER MySQL Options, defaults
 sqluser=root
@@ -52,8 +62,8 @@ while true; do
       shift 2 ;;
     -E | --eshost )
       if [ "$2" == "" ]; then show_help; fi;
-      ES_HOST=$2;
-      echo "ES_HOST set to: $ES_HOST";
+      ELASTIC=$2;
+      echo "ELASTIC set to: $ELASTIC";
       shift 2 ;;
     -u | --dbuser )
       if [ "$2" == "" ]; then show_help; fi;
@@ -182,7 +192,7 @@ perl -p -i -e "s/\{\{ LISTEN_PORT \}\}/$LISTEN_PORT/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_PASS \}\}/$DB_PASS/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_HOST \}\}/$DB_HOST/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_USER \}\}/$DB_USER/" $PATH_KAMAILIO_CFG
-perl -p -i -e "s/\{\{ ES_HOST \}\}/$ES_HOST/" $PATH_KAMAILIO_CFG
+perl -p -i -e "s/\{\{ ELASTIC \}\}/$ELASTIC/" $PATH_KAMAILIO_CFG
 
 # Change kamailio datestamp for sql tables
 # sed -i -e 's/# $var(a) = $var(table) + "_" + $timef(%Y%m%d);/$var(a) = $var(table) + "_" + $timef(%Y%m%d);/' $PATH_KAMAILIO_CFG
