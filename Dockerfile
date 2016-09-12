@@ -57,7 +57,7 @@ COPY data/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 # Kamailio + sipcapture module
 # Install Dependencies.
-RUN apt-get update && apt-get install -y vim-nox git gcc automake build-essential flex bison libcurl4-openssl-dev libjansson-dev libev-dev libncurses5-dev unixodbc-dev xsltproc libssl-dev libmysqlclient-dev make libssl-dev libcurl4-openssl-dev libxml2-dev libpcre3-dev uuid-dev libicu-dev libunistring-dev libsnmp-dev libevent-dev autoconf libtool wget libconfuse-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y vim-nox cron git gcc automake build-essential flex bison libcurl4-openssl-dev libjansson-dev libev-dev libncurses5-dev unixodbc-dev xsltproc libssl-dev libmysqlclient-dev make libssl-dev libcurl4-openssl-dev libxml2-dev libpcre3-dev uuid-dev libicu-dev libunistring-dev libsnmp-dev libevent-dev autoconf libtool wget libconfuse-dev && rm -rf /var/lib/apt/lists/*
 RUN git clone --depth 1 --no-single-branch git://git.kamailio.org/kamailio -b 4.4 /usr/src/kamailio \
 && cd /usr/src/kamailio && make include_modules="db_mysql sipcapture pv textops rtimer xlog sqlops htable sl jansson siputils http_async_client htable rtimer xhttp avpops" cfg && make all && make install 
 
@@ -75,7 +75,6 @@ RUN echo "* * * * * nodejs /usr/src/hepgen.js/hepgen.js -c '/usr/src/hepgen.js/c
 
 # Install the cron service
 RUN touch /var/log/cron.log
-RUN apt-get install cron -y
 
 # Add our crontab file
 RUN echo "30 3 * * * /opt/homer_rotate >> /var/log/cron.log 2>&1" >> /crons.conf
