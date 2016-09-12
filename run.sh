@@ -6,6 +6,7 @@
 DB_USER=homer_user
 DB_PASS=homer_password
 DB_HOST="127.0.0.1"
+ES_HOST="http://127.0.0.1:9200"
 LISTEN_PORT=9060
 
 # HOMER MySQL Options, defaults
@@ -25,6 +26,7 @@ Homer5 Docker parameters:
     --dbhost -h             MySQL host (127.0.0.1 [docker0 bridge])
     --mypass -P             MySQL root local password (secret)
     --hep    -H             Kamailio HEP Socket port (9060)
+    --eshost -E             Elasticsearch API (http://127.0.0.1:9200)
 
 EOF
 exit 0;
@@ -47,6 +49,11 @@ while true; do
       if [ "$2" == "" ]; then show_help; fi;
       DB_HOST=$2;
       echo "DB_HOST set to: $DB_HOST";
+      shift 2 ;;
+    -E | --eshost )
+      if [ "$2" == "" ]; then show_help; fi;
+      ES_HOST=$2;
+      echo "ES_HOST set to: $ES_HOST";
       shift 2 ;;
     -u | --dbuser )
       if [ "$2" == "" ]; then show_help; fi;
@@ -167,7 +174,7 @@ fi
 # KAMAILIO CONFIG
 export PATH_KAMAILIO_CFG=/etc/kamailio/kamailio.cfg
 
-awk '/max_while_loops=100/{print $0 RS "mpath=\"//usr/lib/x86_64-linux-gnu/kamailio/modules/\"";next}1' $PATH_KAMAILIO_CFG >> $PATH_KAMAILIO_CFG.tmp | 2&>1 >/dev/null
+awk '/max_while_loops=100/{print $0 RS "mpath=\"/usr/lib/x86_64-linux-gnu/kamailio/modules/\"";next}1' $PATH_KAMAILIO_CFG >> $PATH_KAMAILIO_CFG.tmp | 2&>1 >/dev/null
 mv $PATH_KAMAILIO_CFG.tmp $PATH_KAMAILIO_CFG
 
 # Replace values in template
@@ -175,6 +182,7 @@ perl -p -i -e "s/\{\{ LISTEN_PORT \}\}/$LISTEN_PORT/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_PASS \}\}/$DB_PASS/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_HOST \}\}/$DB_HOST/" $PATH_KAMAILIO_CFG
 perl -p -i -e "s/\{\{ DB_USER \}\}/$DB_USER/" $PATH_KAMAILIO_CFG
+perl -p -i -e "s/\{\{ ES_HOST \}\}/$ES_HOST/" $PATH_KAMAILIO_CFG
 
 # Change kamailio datestamp for sql tables
 # sed -i -e 's/# $var(a) = $var(table) + "_" + $timef(%Y%m%d);/$var(a) = $var(table) + "_" + $timef(%Y%m%d);/' $PATH_KAMAILIO_CFG
