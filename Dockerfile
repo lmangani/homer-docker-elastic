@@ -65,7 +65,7 @@ COPY data/kamailio.cfg /usr/local/etc/kamailio/kamailio.cfg
 RUN chmod 775 /usr/local/etc/kamailio/kamailio.cfg
 RUN mkdir /etc/kamailio && chmod 775 /etc/kamailio && ln -s /usr/local/etc/kamailio/kamailio.cfg /etc/kamailio/kamailio.cfg
 
-RUN ln -s /usr/lib64 /usr/lib/x86_64-linux-gnu/
+RUN ln -s /usr/local/lib /usr/lib/x86_64-linux-gnu
 
 # GeoIP (http://dev.maxmind.com/geoip/legacy/geolite/)
 # RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
