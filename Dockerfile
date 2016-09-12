@@ -56,19 +56,19 @@ COPY data/preferences.php /var/www/html/api/preferences.php
 COPY data/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 # Kamailio + sipcapture module
-RUN apt-key adv --recv-keys --keyserver keyserver.ubuntu.com 0xfb40d3e6508ea4c8
-RUN echo "deb http://deb.kamailio.org/kamailio jessie main" >> etc/apt/sources.list
-RUN echo "deb-src http://deb.kamailio.org/kamailio jessie main" >> etc/apt/sources.list
-RUN apt-get update -qq && apt-get install -f -yqq kamailio rsyslog kamailio-outbound-modules kamailio-geoip-modules kamailio-sctp-modules kamailio-tls-modules kamailio-websocket-modules kamailio-utils-modules kamailio-mysql-modules kamailio-extra-modules && rm -rf /var/lib/apt/lists/*
+# Install Dependencies.
+RUN apt-get update && apt-get install -y vim-nox git gcc automake build-essential flex bison libncurses5-dev unixodbc-dev xsltproc libssl-dev libmysqlclient-dev make libssl-dev libcurl4-openssl-dev libxml2-dev libpcre3-dev uuid-dev libicu-dev libunistring-dev libsnmp-dev libevent-dev autoconf libtool wget libconfuse-dev
+RUN git clone --depth 1 --no-single-branch git://git.kamailio.org/kamailio -b 4.4 /usr/src/kamailio \
+&& cd /usr/src/kamailio && make include_modules="db_mysql sipcapture pv textops rtimer xlog sqlops htable sl geoip jansson siputils http_async_client htable rtimer xhttp avpops" cfg && make all && make install
 
-COPY data/kamailio.cfg /etc/kamailio/kamailio.cfg
-RUN chmod 775 /etc/kamailio/kamailio.cfg
+COPY data/kamailio.cfg /usr/local/etc/kamailio/kamailio.cfg
+RUN chmod 775 /usr/local/etc/kamailio/kamailio.cfg
+RUN mkdir /etc/kamailio && chmod 775 /etc/kamailio && ln -s /usr/local/etc/kamailio/kamailio.cfg /etc/kamailio/kamailio.cfg
 
 RUN ln -s /usr/lib64 /usr/lib/x86_64-linux-gnu/
 
 # GeoIP (http://dev.maxmind.com/geoip/legacy/geolite/)
-RUN apt-get update -qq && apt-get install -f -yqq geoip-database geoip-database-extra
-# RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
+RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
 
 # Install the cron service
 RUN touch /var/log/cron.log
