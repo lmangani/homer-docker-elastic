@@ -71,7 +71,7 @@ RUN ln -s /usr/local/lib /usr/lib/x86_64-linux-gnu
 # RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
 
 RUN cd /usr/src && git clone https://github.com/sipcapture/hepgen.js && cd hepgen.js && npm install
-RUN echo "* * * * * nodejs /usr/src/hepgen.js/hepgen.js -c '/usr/src/hepgen.js/conf/b2bcall_rtcp.js' 2>&1" >> /crons.conf
+RUN echo "* * * * * nodejs /usr/src/hepgen.js/hepgen.js -c '/usr/src/hepgen.js/config/b2bcall_rtcp.js' 2>&1" >> /crons.conf
 
 # Install the cron service
 RUN touch /var/log/cron.log
