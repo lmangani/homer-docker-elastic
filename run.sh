@@ -181,6 +181,9 @@ if [ "$DB_HOST" == "$DOCK_IP" ]; then
 
 fi
 
+# Push ES Template for HOMER Data
+curl -XPUT $ELASTIC:9200/_template/homer_template --data @homer-es-template.json/etc/homer-es-template.json
+
 # KAMAILIO CONFIG
 export PATH_KAMAILIO_CFG=/etc/kamailio/kamailio.cfg
 
