@@ -83,6 +83,8 @@ RUN crontab /crons.conf
 COPY run.sh /run.sh
 RUN chmod a+rx /run.sh
 
+COPY data/homer-es-template.json /etc/homer-es-template.json
+
 # Add persistent MySQL volumes
 VOLUME ["/etc/mysql", "/var/lib/mysql", "/var/www/html/store"]
 
