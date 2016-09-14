@@ -9,7 +9,7 @@ ENV DEBIAN_FRONTEND noninteractive
 # Update and upgrade apt
 RUN apt-get update -qq
 # RUN apt-get upgrade -y
-RUN apt-get install --no-install-recommends --no-install-suggests -yqq ca-certificates apache2 libapache2-mod-php5 php5 php5-cli php5-gd php-pear php5-dev php5-mysql php5-json php-services-json git wget pwgen npm nano git ngrep && rm -rf /var/lib/apt/lists/*
+RUN apt-get install --no-install-recommends --no-install-suggests -yqq ca-certificates apache2 libapache2-mod-php5 php5 php5-cli php5-gd php-pear php5-dev php5-mysql php5-json php-services-json git wget pwgen npm nano git ngrep curl && rm -rf /var/lib/apt/lists/*
 RUN a2enmod php5
 
 # MySQL
