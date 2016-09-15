@@ -57,9 +57,9 @@ COPY data/vhost.conf /etc/apache2/sites-enabled/000-default.conf
 
 # Kamailio + sipcapture module
 # Install Dependencies.
-RUN apt-get update && apt-get install -y vim-nox cron git gcc automake build-essential flex bison libcurl4-openssl-dev libjansson-dev libev-dev libncurses5-dev unixodbc-dev xsltproc libssl-dev libmysqlclient-dev make libssl-dev libcurl4-openssl-dev libxml2-dev libpcre3-dev uuid-dev libicu-dev libunistring-dev libsnmp-dev libevent-dev autoconf libtool wget libconfuse-dev && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y vim-nox cron git gcc automake build-essential flex bison libcurl4-openssl-dev libjansson-dev libev-dev libncurses5-dev unixodbc-dev xsltproc libssl-dev libmysqlclient-dev make libssl-dev libcurl4-openssl-dev libxml2-dev libpcre3-dev uuid-dev libicu-dev libunistring-dev libsnmp-dev libevent-dev autoconf libtool wget libconfuse-dev libgeoip-dev libgeoip1 && rm -rf /var/lib/apt/lists/*
 RUN git clone --depth 1 --no-single-branch git://git.kamailio.org/kamailio -b 4.4 /usr/src/kamailio \
-&& cd /usr/src/kamailio && make include_modules="db_mysql sipcapture pv textops rtimer xlog sqlops htable sl jansson siputils http_async_client htable rtimer xhttp avpops" cfg && make all && make install 
+&& cd /usr/src/kamailio && make include_modules="db_mysql sipcapture pv textops rtimer xlog sqlops htable sl jansson siputils http_async_client htable rtimer xhttp avpops geoip" cfg && make all && make install 
 
 COPY data/kamailio.cfg /usr/local/etc/kamailio/kamailio.cfg
 RUN chmod 775 /usr/local/etc/kamailio/kamailio.cfg
@@ -68,7 +68,7 @@ RUN mkdir /etc/kamailio && chmod 775 /etc/kamailio && ln -s /usr/local/etc/kamai
 RUN ln -s /usr/local/lib /usr/lib/x86_64-linux-gnu
 
 # GeoIP (http://dev.maxmind.com/geoip/legacy/geolite/)
-# RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
+RUN cd /usr/share/GeoIP && wget -N -q http://geolite.maxmind.com/download/geoip/database/GeoLiteCity.dat.gz && gunzip GeoLiteCity.dat.gz
 
 RUN cd /usr/src && git clone https://github.com/sipcapture/hepgen.js && cd hepgen.js && npm install
 RUN echo "* * * * * nodejs /usr/src/hepgen.js/hepgen.js -c '/usr/src/hepgen.js/config/b2bcall_rtcp.js' 2>&1" >> /crons.conf
