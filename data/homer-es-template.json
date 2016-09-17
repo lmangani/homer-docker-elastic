@@ -17,11 +17,7 @@
           "ip_fields" : { 
             "match" : "*_ip",
             "mapping" : { "type" : "ip" } }
-          }, {
-          "byte_fields" : { 
-            "match" : "*_bytes",
-            "mapping" : { "type" : "byte" } }
-          },
+          }, 
           {
           "string_fields" : {
             "match" : "*",
