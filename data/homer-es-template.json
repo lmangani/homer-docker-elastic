@@ -1,5 +1,5 @@
 {
-  "template": "homer-*",
+  "template": "homer*",
     "mappings" : {
     "_default_" : {
        "_all" : {"enabled" : true, "omit_norms" : true},
